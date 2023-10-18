@@ -1,6 +1,7 @@
 "use server"
 
 import Product from "../models/product.model";
+import { revalidatePath } from "next/cache";
 import { connectToDB } from "../mongoose";
 import { scrapedAmazonProduct } from "../scraper";
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
@@ -33,14 +34,31 @@ export async function scrapeAndStoreProduct(productUrl:string){
             }
         }
 
-        consts newProduct = await Product.findOneAndUpdate({
-            url:scrapedProduct.url,
-            
-        })
 
-
+        const newProduct = await Product.findOneAndUpdate(
+            { url:scrapedProduct.url },
+             product,
+            { upsert: true, new: true} // si product n'existe pas dans le bdd il va etre créé
+        );
+        //on doit revalider pour que sa soit automatiquement updater
+        revalidatePath(`/products/${newProduct._id}`);
 
     } catch (error:any) {
         throw new Error(`Failed to create/update product: ${error.message}`)
+    }
+}
+
+export async function getProductById(productId: String){
+    try {
+        connectToDB();
+
+        const product = await Product.findOne({ _id: productId });
+
+        if(!product) return null;
+
+        return product;
+
+    } catch (error) {
+        console.log(error);
     }
 }
