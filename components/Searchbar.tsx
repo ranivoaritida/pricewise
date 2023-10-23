@@ -9,7 +9,7 @@ const isValidAmazonProductURL = (url:string) =>{
     const parsedURL = new URL(url);
     const hostname = parsedURL.hostname;
 
-    if(hostname.includes('amazon.com') || hostname.includes('amazon.') || hostname.endsWith('awazon')){
+    if(hostname.includes('amazon.com') || hostname.includes('amazon.') || hostname.endsWith('amazon')){
       return true;
     }
   } catch (error) {
@@ -42,6 +42,7 @@ const Searchbar = () => {
       setIsLoading(false)
     }
   }
+  
   return (
     <form className='flex flex-wrap gap-4 mt-12' onSubmit={handleSubmit}>
         <input type="text" 

@@ -17,6 +17,8 @@ export async function scrapeAndStoreProduct(productUrl:string){
 
         let product = scrapedProduct;
 
+        console.log(product.title);
+
         const existingProduct = await Product.findOne({ url: scrapedProduct.url });
 
         if(existingProduct){
@@ -73,5 +75,24 @@ export async function getAllProducts() {
         
     } catch (error) {
         console.log(error)
+    }
+}
+
+export async function getSimilarProduct(productId: String) {
+    try {
+        connectToDB();
+
+        const currentProduct = await Product.findById(productId);
+
+        if(!currentProduct) return null;
+
+        const similarProduct = await Product.find({
+            _id: {$ne: productId }, //$ne not equal to the  current product id
+        }).limit(3);
+
+        return similarProduct;
+
+    } catch (error) {
+        console.log(error);
     }
 }
