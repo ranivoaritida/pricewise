@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 
 type Props={
-  params: { id: String}
+  params: { id: string}
 }
 const page = async  ({params : {id}}: Props) => {
   const product:Product = await getProductById(id);
@@ -142,7 +142,7 @@ const page = async  ({params : {id}}: Props) => {
             </div>
           </div>
 
-          <Modal />
+          <Modal productId={id} />
         </div>
       </div>
       <div className="flex flex-col gap-16 ">
