@@ -1,7 +1,9 @@
+"use server"
+
 import { EmailContent, EmailProductInfo, NotificationType } from '@/types';
 import nodemailer from 'nodemailer';
 
-export const Notification ={
+const Notification ={
     WELCOME: 'WELCOME',
     CHANGE_OF_STOCK:'CHANGE_OF_STOCK',
     LOWEST_PRICE:'lOWEST_PRICE',
@@ -75,16 +77,17 @@ export async function generateEmailBody( product: EmailProductInfo,type: Notific
     return { subject, body };
   }
 
-const transpoter = nodemailer.createTransport({
-  pool:true,
-  service:'hotmail', //le plus simple a utilisé 
-  prot:2525,
+const transporter = nodemailer.createTransport({
+  pool: true,
+  service:'hotmail',
+  port:2525,
   auth: {
     user: 'ratdsandy@outlook.fr',
-    pass: 'process.env.EMAIL_PASSWORD',
+    pass: process.env.EMAIL_PASSWORD,
   },
   maxConnections:1
 })
+
 
 export const sendEmail = async (emailContent : EmailContent, sendTo: string[]) => {
 
@@ -95,7 +98,7 @@ export const sendEmail = async (emailContent : EmailContent, sendTo: string[]) =
     subject:emailContent.subject,
   }
 
-  transpoter.sendEmail(mailOptions,(error: any, info: any) => {
+  transporter.sendMail(mailOptions,(error: any, info: any) => {
     if(error) return console.log(error);
     console.log('Email sent:', info);
   })

@@ -21,7 +21,7 @@ export async function scrapeAndStoreProduct(productUrl:string){
 
         console.log(product.title);
 
-        const existingProduct = await Product.findOne({ url: scrapedProduct.url });
+         const existingProduct = await Product.findOne({ url: scrapedProduct.url });
 
         if(existingProduct){
             const updatedPriceHistory : any = [
@@ -45,7 +45,7 @@ export async function scrapeAndStoreProduct(productUrl:string){
             { upsert: true, new: true} // si product n'existe pas dans le bdd il va etre créé
         );
         //on doit revalider pour que sa soit automatiquement updater
-        revalidatePath(`/products/${newProduct._id}`);
+        revalidatePath(`/products/${newProduct._id}`); 
 
     } catch (error:any) {
         throw new Error(`Failed to create/update product: ${error.message}`)

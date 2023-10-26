@@ -25,13 +25,9 @@ export async function scrapedAmazonProduct(url:string){
     try {
         
         const response = await axios.get(url,options);
-        console.log(response.data);
-
-
-        console.log("ito ilay repsonse" + response)
         const sa = cheerio.load(response.data);
-        console.log("mandalo ato eh koa")
         const title = sa('#productTitle').text().trim();
+        console.log("ito titre"+title);
         const currentPrice = extractPrice(
             sa('.priceToPay span.a-price-whole'),
             sa('a.size.base.a-color-price'),
@@ -78,9 +74,10 @@ export async function scrapedAmazonProduct(url:string){
             description,
             lowestPrice:Number(currentPrice) || Number(originalPrice),
             highestPrice:Number(originalPrice) || Number(currentPrice),
-            average:Number(currentPrice) || Number(originalPrice),
+            averagePrice:Number(currentPrice) || Number(originalPrice),
 
         }
+        console.log(data)
         return data;
 
 
